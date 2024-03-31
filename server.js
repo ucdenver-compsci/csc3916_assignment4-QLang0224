@@ -62,6 +62,37 @@ router.post('/movies', (req, res) => {
         });
     });
 
+app.get('/movies', (req, res) => {
+    const includeReviews = req.query.reviews === 'true';
+    if (includeReviews) {
+        movies.aggregate([
+            {
+                $lookup: {
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'movieId',
+                    as: 'reviews'
+                }
+            }
+        ]).exec((err, moviesWithreviews) => {
+            if (err) {
+                res.status(500).json({ success: false, message: 'Failed to fetch movies with reviews.', error: err });
+            } else {
+                res.json({ success: true, movies: moviesWithReviews });
+            }
+        });
+    } else {
+        // Return movie information without reviews
+        Movie.find()
+            .then(movies => {
+                res.json({ success: true, movies });
+            })
+            .catch(err => {
+                res.status(500).json({ success: false, message: 'Failed to fetch movies.', error: err });
+            });
+    }
+});
+
 router.post('/reviews', verifyToken, (req, res) => {
     // Extract review details from request body
     if (!req.body.movieId, req.body.username, req.body.review, req.body.rating) {
