@@ -94,6 +94,7 @@ app.get('/movies', (req, res) => {
 });
 
 router.post('/reviews', verifyToken, (req, res) => {
+    router.post('/reviews', (req, res) => {
     // Extract review details from request body
     if (!req.body.movieId, req.body.username, req.body.review, req.body.rating) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
@@ -113,8 +114,8 @@ router.post('/reviews', verifyToken, (req, res) => {
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to create review.', error });
         });
+    });
 });
-
 router.get('/reviews', verifyToken, (req, res) => {
    Movie.find()
         .then(movies => {
