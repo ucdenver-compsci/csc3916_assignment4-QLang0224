@@ -77,7 +77,7 @@ router.post('/reviews', verifyToken, (req, res) => {
 
     newReview.save()
         .then(review => {
-            res.status(201).json({ success: true, message: 'Review created successfully.', review });
+            res.status(201).json({ success: true, message: 'Review created successfully.', reviews });
         })
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to create review.', error });
@@ -87,7 +87,7 @@ router.post('/reviews', verifyToken, (req, res) => {
 router.get('/reviews', verifyToken, (req, res) => {
    Movie.find()
         .then(movies => {
-            res.status(200).json({ success: true, movies });
+            res.status(200).json({ success: true, reviews });
         })
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error });
